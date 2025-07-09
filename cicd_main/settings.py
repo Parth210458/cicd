@@ -71,7 +71,6 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'cicd_main.wsgi.application'
  
-
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 print(os.getenv('DB_NAME'),os.getenv('DB_USER'))
