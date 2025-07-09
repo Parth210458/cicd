@@ -71,6 +71,10 @@ jobs:
         with:
           ssh-private-key: ${{ secrets.SSH_KEY }}
 
+      - name: Upload .env to remote server
+        run: |
+          scp -o StrictHostKeyChecking=no .env ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST }}:/home/${{ secrets.SSH_USERNAME }}/.env
+
       - name: Pull and Restart Docker on Remote Server
         run: |
           ssh -o StrictHostKeyChecking=no ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST }} << EOF
@@ -78,7 +82,12 @@ jobs:
             docker pull ${{ secrets.DOCKER_USERNAME }}/${{ secrets.APP_NAME }}:latest
             docker stop ${{ secrets.APP_NAME }} || true
             docker rm ${{ secrets.APP_NAME }} || true
-            docker run -d --name ${{ secrets.APP_NAME }} -p 8002:8000 ${{ secrets.DOCKER_USERNAME }}/${{ secrets.APP_NAME }}:latest
+            docker run -d \
+              --name ${{ secrets.APP_NAME }} \
+              --env-file /home/${{ secrets.SSH_USERNAME }}/.env \
+              -p 8002:8000 \
+              ${{ secrets.DOCKER_USERNAME }}/${{ secrets.APP_NAME }}:latest
+            docker system prune -af --filter "until=24h"
           EOF
 
 
