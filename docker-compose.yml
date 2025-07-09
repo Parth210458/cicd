@@ -1,14 +1,11 @@
 services:
   web:
-    build: .
+    image: pthgtm619/cicd:latest
+    container_name: cicd-app
     ports:
-      - "8001:8000"
-    volumes:
-      - .:/app
+      - "8002:8000"
     environment:
-      - DB_HOST=172.17.0.1  # This is the key trick on Windows/macOS
+      - DB_HOST=172.17.0.1
       - DB_NAME=cicd_test
       - DB_USER=postgres
-      - DB_PASSWORD=admin
-    command: ["python", "-c", "import os; print(os.getenv('DB_NAME'), os.getenv('DB_USER'))"]
-
+      - DB_PASSWORD=postgres
