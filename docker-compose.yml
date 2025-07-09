@@ -1,0 +1,13 @@
+services:
+  web:
+    build: .
+    ports:
+      - "8001:8000"
+    volumes:
+      - .:/app
+    environment:
+      - DB_HOST=host.docker.internal  # This is the key trick on Windows/macOS
+      - DB_NAME=cicd_test
+      - DB_USER=postgres
+      - DB_PASSWORD=admin
+    depends_on: []
