@@ -10,4 +10,5 @@ services:
       - DB_NAME=cicd_test
       - DB_USER=postgres
       - DB_PASSWORD=admin
-    depends_on: []
+    command: ["python", "-c", "import os; print(os.getenv('DB_NAME'), os.getenv('DB_USER'))"]
+
